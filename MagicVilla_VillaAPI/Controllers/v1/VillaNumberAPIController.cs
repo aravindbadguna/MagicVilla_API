@@ -14,10 +14,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
 using System.Net;
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
-    [Route("api/villaNumberAPI")]
+    [Route("api/v{version:apiVersion}/villaNumberAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaNumberAPIController : ControllerBase
     {
         protected APIResponse _response;
@@ -35,12 +36,13 @@ namespace MagicVilla_VillaAPI.Controllers
 
 
         [HttpGet]
+        // [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVillaNumbers()
         {
             try
             {
-                IEnumerable<VillaNumber> villaNumberList = await _dbVillaNumber.GetAllAsync(includeProperties:"Villa");
+                IEnumerable<VillaNumber> villaNumberList = await _dbVillaNumber.GetAllAsync(includeProperties: "Villa");
                 _response.Result = _mapper.Map<List<VillaNumberDTO>>(villaNumberList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
@@ -54,6 +56,11 @@ namespace MagicVilla_VillaAPI.Controllers
 
         }
 
+        [HttpGet("GetString")]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "string", "Alpha" };
+        }
 
         [HttpGet("{id:int}", Name = "GetVillaNumber")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -103,7 +110,7 @@ namespace MagicVilla_VillaAPI.Controllers
                     ModelState.AddModelError("ErrorMessages", "Villa Number Already Exists");
                     return BadRequest(ModelState);
                 }
-                if(await _dbVilla.GetAsync(u=>u.Id==createDTO.VillaId)==null)
+                if (await _dbVilla.GetAsync(u => u.Id == createDTO.VillaId) == null)
                 {
                     ModelState.AddModelError("ErrorMessages", "Villa ID is invalid");
                     return BadRequest(ModelState);

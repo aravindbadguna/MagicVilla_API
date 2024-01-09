@@ -13,10 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
 using System.Net;
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
-    [Route("api/villaAPI")]
+    [Route("api/v{version:apiVersion}/villaAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaAPIController : ControllerBase
     {
         protected APIResponse _response;
@@ -55,7 +56,7 @@ namespace MagicVilla_VillaAPI.Controllers
 
 
         [HttpGet("{id:int}", Name = "GetVilla")]
-      
+
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
